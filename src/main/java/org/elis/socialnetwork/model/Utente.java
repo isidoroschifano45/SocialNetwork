@@ -35,7 +35,7 @@ public class Utente {
 
     // RELAZIONE POST
 
-    //Un utente puo creare Many post
+    //Un utente puo creare Many post TEST
     @OneToMany(mappedBy = "utente", fetch = FetchType.LAZY)
     private List<Post> posts;
 
