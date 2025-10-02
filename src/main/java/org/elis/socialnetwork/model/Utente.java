@@ -33,7 +33,7 @@ public class Utente {
     private List<Utente> following;
 
 
-    // RELAZIONE POST Finita
+    // RELAZIONE POST
 
     //Un utente puo creare Many post
     @OneToMany(mappedBy = "utente", fetch = FetchType.LAZY)
