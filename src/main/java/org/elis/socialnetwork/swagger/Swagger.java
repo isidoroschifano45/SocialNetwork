@@ -29,9 +29,9 @@ public class Swagger {
                                 .version("1.0")
                                 .contact(
                                         new Contact()
-                                                .name("Luigi Massa")
-                                                .email("luigimassa2005@gmail.com")
-                                                .url("github.com/GGNado")
+                                                .name("Isidoro Schifano")
+                                                .email("isidoroschifano98@gmail.com")
+                                                .url("github.com/isidoroschifano45")
                                 )
                                 .extensions(Map.of(
                                         "x-contacts", List.of(
