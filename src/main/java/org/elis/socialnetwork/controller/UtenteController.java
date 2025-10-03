@@ -74,12 +74,19 @@ public class UtenteController {
         return ResponseEntity.ok().body(utenteMapper.convertToDTOWithFollow(utenteSeguito));
     }
 
-    @PostMapping("/utenti/{id}/remove/{idFollowing}")
+    @PostMapping("/utenti/{id}/removeFollowing/{idFollowing}")
     public ResponseEntity<UtenteWithFollowDTO> removeFollowing(@PathVariable Long id, @PathVariable Long idFollowing){
 
         Utente utenteSeguito = utenteService.removeFollowing(id, idFollowing);
 
         return ResponseEntity.ok().body(utenteMapper.convertToDTOWithFollow(utenteSeguito));
+    }
+
+    @PostMapping("/utenti/{id}/removeFollower/{idFollower}")
+    public ResponseEntity<UtenteWithFollowDTO> removeFollower(@PathVariable Long id, @PathVariable Long idFollower){
+            Utente utenteSeguito = utenteService.removeFollower(id, idFollower);
+
+            return ResponseEntity.ok().body(utenteMapper.convertToDTOWithFollow(utenteSeguito));
     }
 
     // - - - - - TUTTI I PATCH - - - - -

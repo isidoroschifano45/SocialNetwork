@@ -86,6 +86,22 @@ public class UtenteServiceImpl implements UtenteService {
         return utenteRepo.save(utenteMain);
     }
 
+    @Override
+    public Utente removeFollower(Long id, Long idFollower) {
+        Utente utenteMain = utenteRepo.findById(id).orElseThrow(()->new UtenteNotFoundException("Utente con id: "+id+" non trovato"));
+        Utente utenteSeguito = utenteRepo.findById(idFollower).orElseThrow(()->new UtenteNotFoundException("Utente con id: "+id+" non trovato"));
+
+        if(!utenteMain.getFollowing().contains(utenteSeguito)){
+            throw new UtenteNotFoundException("Utente con id: " + idFollower + " non è nella lista di coloro che ti seguono");
+        }
+        utenteMain.getFollowers().remove(utenteSeguito);
+        utenteSeguito.getFollowing().remove(utenteMain);
+
+        utenteRepo.save(utenteSeguito);
+
+        return utenteRepo.save(utenteMain);
+    }
+
 
     @Override
     public List<Utente> findFollowers(Long id) {
