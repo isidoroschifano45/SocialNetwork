@@ -1,5 +1,8 @@
 package org.elis.socialnetwork.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.elis.socialnetwork.dto.request.utente.UtenteRegisterDTO;
 import org.elis.socialnetwork.dto.request.utente.UtenteUpdateDTO;
@@ -12,15 +15,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// I Controller gestiscono le richieste HTTP, espongono le API.
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "Controller degli UTENTI", description = "API per la gestione degli utenti")
 public class UtenteController {
 
+    // I Service gestiscono la logica di business e l'interazione con il database
+    private final UtenteService utenteService;
 
-    private final UtenteService utenteService; //questo comunica con il db
-    private final UtenteMapper utenteMapper;// questo invece converte da entità a DTO e viceversa
+    // I Mapper gestiscono la conversione tra entità e DTO
+    private final UtenteMapper utenteMapper;
 
-    //ottengo la lista di tutti gli utenti
+    // - - - - - TUTTI I GET - - - - -
+    @Operation(summary = "Ottieni la lista di tutti gli utenti")
     @GetMapping("/utenti")
     public ResponseEntity<List<UtenteResponseDTO>> getUtenti(){
 
@@ -29,7 +37,7 @@ public class UtenteController {
                 .toList());
     }
 
-    //ottengo l'utente tramite l'id
+    @Operation(summary = "Ottieni un utente dall'id")
     @GetMapping("/utenti/{id}")
     public ResponseEntity<UtenteResponseDTO> getUtenteById(@PathVariable Long id){
 
@@ -37,7 +45,7 @@ public class UtenteController {
         return ResponseEntity.ok().body(utenteMapper.convertToDTO(utenteById));
     }
 
-    //trovo un utente dall'username
+    @Operation(summary = "Ottieni un utente dallo username")
     @GetMapping("/utenti/username/{username}")
     public ResponseEntity<UtenteResponseDTO> findUtenteByUsername(@PathVariable String username){
 
@@ -46,35 +54,33 @@ public class UtenteController {
 
     }
 
-    //inserisco l'utente
+    // - - - - - TUTTI I POST - - - - -
+
+    @Operation(summary = "Inserisci un nuovo utente")
     @PostMapping("/utenti")
-    public ResponseEntity<UtenteResponseDTO> insertUtente(@RequestBody UtenteRegisterDTO u){
+    public ResponseEntity<UtenteResponseDTO> insertUtente(@Valid @RequestBody UtenteRegisterDTO u){
 
         Utente utenteSalvato = utenteService.saveUtente(utenteMapper.formInsertUtente(u));
 
         return ResponseEntity.ok().body(utenteMapper.convertToDTO(utenteSalvato));
     }
 
-    //modifico un utente
+    // - - - - - TUTTI I PATCH - - - - -
+
+    @Operation(summary = "Aggiorna un utente dall'id")
     @PatchMapping("/utenti/{id}")
     public ResponseEntity<UtenteResponseDTO> updateUtenteById(@PathVariable Long id , @RequestBody UtenteUpdateDTO u){
         utenteService.updateUtenteById(id , u);
         return ResponseEntity.ok().build();
     }
 
-    //elimino un utente tramite l'id
+    // - - - - - TUTTI I DELETE - - - - -
+
+    @Operation(summary = "Cancella un utente dall'id")
     @DeleteMapping("/utenti/{id}")
     public ResponseEntity deleteUtenteById(@PathVariable Long id){
 
         utenteService.deleteUtenteById(id);
         return ResponseEntity.ok().build();
     }
-
-
-
-
-
-
-
-
 }
