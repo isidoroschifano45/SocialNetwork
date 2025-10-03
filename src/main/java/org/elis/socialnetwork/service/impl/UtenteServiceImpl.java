@@ -2,6 +2,7 @@ package org.elis.socialnetwork.service.impl;
 
 
 import org.elis.socialnetwork.dto.request.utente.UtenteUpdateDTO;
+import org.elis.socialnetwork.exception.utente.UtenteAlreadyFollowed;
 import org.elis.socialnetwork.exception.utente.UtenteNotFoundException;
 import org.elis.socialnetwork.model.Utente;
 import org.elis.socialnetwork.repository.UtenteRepository;
@@ -51,6 +52,40 @@ public class UtenteServiceImpl implements UtenteService {
         return utenteRepo.save(daModificare);
 
     }
+
+    @Override
+    public Utente addFollowing(Long id, Long idFollowing) {
+        Utente utenteMain = utenteRepo.findById(id).orElseThrow(()->new UtenteNotFoundException("Utente con id: "+id+" non trovato"));
+        Utente utenteSeguito = utenteRepo.findById(idFollowing).orElseThrow(()->new UtenteNotFoundException("Utente con id: "+id+" non trovato"));
+
+        if(utenteMain.getFollowing().contains(utenteSeguito)){
+            throw new UtenteAlreadyFollowed("Utente con id: "+idFollowing+" già seguito");
+        }
+        utenteMain.getFollowing().add(utenteSeguito);
+        utenteSeguito.getFollowers().add(utenteMain);
+
+        utenteRepo.save(utenteSeguito);
+
+        return utenteRepo.save(utenteMain);
+
+    }
+
+    @Override
+    public Utente removeFollowing(Long id, Long idFollowing) {
+        Utente utenteMain = utenteRepo.findById(id).orElseThrow(()->new UtenteNotFoundException("Utente con id: "+id+" non trovato"));
+        Utente utenteSeguito = utenteRepo.findById(idFollowing).orElseThrow(()->new UtenteNotFoundException("Utente con id: "+id+" non trovato"));
+
+        if(!utenteMain.getFollowing().contains(utenteSeguito)){
+            throw new UtenteNotFoundException("Utente con id: " + idFollowing + " non è nella lista dei seguiti");
+        }
+        utenteMain.getFollowing().remove(utenteSeguito);
+        utenteSeguito.getFollowers().remove(utenteMain);
+
+        utenteRepo.save(utenteSeguito);
+
+        return utenteRepo.save(utenteMain);
+    }
+
 
     @Override
     public List<Utente> findFollowers(Long id) {

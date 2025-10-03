@@ -1,5 +1,6 @@
 package org.elis.socialnetwork.exception;
 
+import org.elis.socialnetwork.exception.utente.UtenteAlreadyFollowed;
 import org.elis.socialnetwork.exception.utente.UtenteNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,6 +55,17 @@ public class GlobalExceptionHandler {
         body.put("errors", errors);
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UtenteAlreadyFollowed.class)
+    public ResponseEntity<?> handleUtenteNotFound(UtenteAlreadyFollowed ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.NOT_ACCEPTABLE.value());
+        body.put("error", "Not Acceptable");
+        body.put("message", ex.getMessage());
+        body.put("descrizione", "Segui già questo utente");
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
 }

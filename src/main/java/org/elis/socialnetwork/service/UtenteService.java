@@ -13,6 +13,8 @@ public interface UtenteService {
     void deleteUtenteById(Long id);
     List<Utente> findAll();
     Utente updateUtenteById(Long id, UtenteUpdateDTO u);
+    Utente addFollowing(Long id, Long idFollowing);
+    Utente removeFollowing(Long id, Long idFollowing);
     List<Utente> findFollowers(Long id);
     List<Utente> findFollowing(Long id);
 

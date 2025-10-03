@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.elis.socialnetwork.dto.request.utente.UtenteRegisterDTO;
 import org.elis.socialnetwork.dto.request.utente.UtenteUpdateDTO;
 import org.elis.socialnetwork.dto.response.utente.UtenteResponseDTO;
+import org.elis.socialnetwork.dto.response.utente.UtenteWithFollowDTO;
 import org.elis.socialnetwork.mapper.utente.UtenteMapper;
 import org.elis.socialnetwork.model.Utente;
 import org.elis.socialnetwork.service.UtenteService;
@@ -39,10 +40,10 @@ public class UtenteController {
 
     @Operation(summary = "Ottieni un utente dall'id")
     @GetMapping("/utenti/{id}")
-    public ResponseEntity<UtenteResponseDTO> getUtenteById(@PathVariable Long id){
+    public ResponseEntity<UtenteWithFollowDTO> getUtenteById(@PathVariable Long id){
 
        Utente utenteById =  utenteService.findById(id);
-        return ResponseEntity.ok().body(utenteMapper.convertToDTO(utenteById));
+        return ResponseEntity.ok().body(utenteMapper.convertToDTOWithFollow(utenteById));
     }
 
     @Operation(summary = "Ottieni un utente dallo username")
@@ -63,6 +64,22 @@ public class UtenteController {
         Utente utenteSalvato = utenteService.saveUtente(utenteMapper.formInsertUtente(u));
 
         return ResponseEntity.ok().body(utenteMapper.convertToDTO(utenteSalvato));
+    }
+
+    @PostMapping("/utenti/{id}/segue/{idFollowing}")
+    public ResponseEntity<UtenteWithFollowDTO> seguiUtente(@PathVariable Long id, @PathVariable Long idFollowing){
+
+        Utente utenteSeguito = utenteService.addFollowing(id, idFollowing);
+
+        return ResponseEntity.ok().body(utenteMapper.convertToDTOWithFollow(utenteSeguito));
+    }
+
+    @PostMapping("/utenti/{id}/remove/{idFollowing}")
+    public ResponseEntity<UtenteWithFollowDTO> removeFollowing(@PathVariable Long id, @PathVariable Long idFollowing){
+
+        Utente utenteSeguito = utenteService.removeFollowing(id, idFollowing);
+
+        return ResponseEntity.ok().body(utenteMapper.convertToDTOWithFollow(utenteSeguito));
     }
 
     // - - - - - TUTTI I PATCH - - - - -

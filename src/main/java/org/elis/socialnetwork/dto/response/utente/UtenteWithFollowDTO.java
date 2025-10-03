@@ -4,15 +4,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
-public class UtenteResponseDTO {
+public class UtenteWithFollowDTO {
 
     private Long id;
     private String username;
-    private String email;
-    private Integer followers;
-    private Integer following;
+    private List<UtenteResponseDTO> followers;
+    private List<UtenteResponseDTO> following;
 
 }

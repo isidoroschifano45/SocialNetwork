@@ -2,6 +2,7 @@ package org.elis.socialnetwork.mapper.utente;
 
 import org.elis.socialnetwork.dto.request.utente.UtenteRegisterDTO;
 import org.elis.socialnetwork.dto.response.utente.UtenteResponseDTO;
+import org.elis.socialnetwork.dto.response.utente.UtenteWithFollowDTO;
 import org.elis.socialnetwork.model.Utente;
 import org.springframework.stereotype.Component;
 
@@ -22,8 +23,25 @@ public class UtenteMapper {
         utenteResponse.setId(u.getId());
         utenteResponse.setUsername(u.getUsername());
         utenteResponse.setEmail(u.getEmail());
+        utenteResponse.setFollowers(u.getFollowers().size());
+        utenteResponse.setFollowing(u.getFollowing().size());
 
         return utenteResponse;
     }
+
+    public UtenteWithFollowDTO convertToDTOWithFollow(Utente u){
+        UtenteWithFollowDTO utenteWithFollow = new UtenteWithFollowDTO();
+        utenteWithFollow.setId(u.getId());
+        utenteWithFollow.setUsername(u.getUsername());
+        utenteWithFollow.setFollowers(u.getFollowers().stream()
+                .map(this::convertToDTO)
+                .toList());
+        utenteWithFollow.setFollowing(u.getFollowing().stream()
+                .map(this::convertToDTO)
+                .toList());
+
+        return  utenteWithFollow;
+    }
+
 
 }
