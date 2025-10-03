@@ -2,6 +2,7 @@ package org.elis.socialnetwork.service.impl;
 
 
 import org.elis.socialnetwork.dto.request.utente.UtenteUpdateDTO;
+import org.elis.socialnetwork.exception.utente.UtenteNotFoundException;
 import org.elis.socialnetwork.model.Utente;
 import org.elis.socialnetwork.repository.UtenteRepository;
 import org.elis.socialnetwork.service.UtenteService;
@@ -18,12 +19,12 @@ public class UtenteServiceImpl implements UtenteService {
 
     @Override
     public Utente findById(Long id) {
-         return utenteRepo.findById(id).orElseThrow(()->new RuntimeException("Utente non trovato"));
+         return utenteRepo.findById(id).orElseThrow(()->new UtenteNotFoundException("Utente con id: "+id+" non trovato"));
     }
 
     @Override
     public Utente findUtenteByUsername(String username) {
-       return utenteRepo.findUtenteByUsername(username).orElseThrow(()->new RuntimeException("Utente non trovato"));
+       return utenteRepo.findUtenteByUsername(username).orElseThrow(()->new UtenteNotFoundException("Utente con username: "+username+" non trovato"));
     }
 
     @Override
@@ -33,7 +34,7 @@ public class UtenteServiceImpl implements UtenteService {
 
     @Override
     public void deleteUtenteById(Long id) {
-        Utente u = utenteRepo.findById(id).orElseThrow(()->new RuntimeException("Utente non trovato"));
+        Utente u = utenteRepo.findById(id).orElseThrow(()->new UtenteNotFoundException("Utente con id: "+id+" non trovato"));
         utenteRepo.delete(u);
     }
 
@@ -44,7 +45,7 @@ public class UtenteServiceImpl implements UtenteService {
 
     @Override
     public Utente updateUtenteById(Long id, UtenteUpdateDTO u) {
-        Utente daModificare = utenteRepo.findById(id).orElseThrow(()->new RuntimeException("Utente non trovato"));
+        Utente daModificare = utenteRepo.findById(id).orElseThrow(()->new UtenteNotFoundException("Utente con id: "+id+" non trovato"));
         daModificare.setUsername(u.getUsername());
 
         return utenteRepo.save(daModificare);
@@ -54,13 +55,13 @@ public class UtenteServiceImpl implements UtenteService {
     @Override
     public List<Utente> findFollowers(Long id) {
 
-        List<Utente> followers = utenteRepo.findById(id).orElseThrow(()->new RuntimeException("Utente non trovato")).getFollowers();
+        List<Utente> followers = utenteRepo.findById(id).orElseThrow(()->new UtenteNotFoundException("Utente con: " + id+ " non trovato")).getFollowers();
         return followers;
     }
 
     @Override
     public List<Utente> findFollowing(Long id) {
-        List<Utente> following = utenteRepo.findById(id).orElseThrow(()->new RuntimeException("Utente non trovato")).getFollowing();
+        List<Utente> following = utenteRepo.findById(id).orElseThrow(()->new UtenteNotFoundException("Utente con: " + id + " non trovato")).getFollowing();
         return following;
     }
 
