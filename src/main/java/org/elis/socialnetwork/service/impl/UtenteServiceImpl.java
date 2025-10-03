@@ -1,6 +1,7 @@
 package org.elis.socialnetwork.service.impl;
 
 
+import org.elis.socialnetwork.dto.request.utente.UtenteUpdateDTO;
 import org.elis.socialnetwork.model.Utente;
 import org.elis.socialnetwork.repository.UtenteRepository;
 import org.elis.socialnetwork.service.UtenteService;
@@ -42,11 +43,9 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
-    public Utente updateUtenteById(Long id, Utente u) {
+    public Utente updateUtenteById(Long id, UtenteUpdateDTO u) {
         Utente daModificare = utenteRepo.findById(id).orElseThrow(()->new RuntimeException("Utente non trovato"));
         daModificare.setUsername(u.getUsername());
-        daModificare.setEmail(u.getEmail());
-        daModificare.setPassword(u.getPassword());
 
         return utenteRepo.save(daModificare);
 
