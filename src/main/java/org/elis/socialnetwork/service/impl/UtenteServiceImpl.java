@@ -103,18 +103,6 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
 
-    @Override
-    public List<Utente> findFollowers(Long id) {
-
-        List<Utente> followers = utenteRepo.findById(id).orElseThrow(()->new UtenteNotFoundException("Utente con: " + id+ " non trovato")).getFollowers();
-        return followers;
-    }
-
-    @Override
-    public List<Utente> findFollowing(Long id) {
-        List<Utente> following = utenteRepo.findById(id).orElseThrow(()->new UtenteNotFoundException("Utente con: " + id + " non trovato")).getFollowing();
-        return following;
-    }
 
 
 }

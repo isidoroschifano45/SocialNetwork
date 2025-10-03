@@ -16,7 +16,6 @@ public interface UtenteService {
     Utente addFollowing(Long id, Long idFollowing);
     Utente removeFollowing(Long id, Long idFollowing);
     Utente removeFollower(Long id, Long idFollower);
-    List<Utente> findFollowers(Long id);
-    List<Utente> findFollowing(Long id);
+
 
 }
