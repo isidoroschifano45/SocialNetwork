@@ -1,10 +1,18 @@
 package org.elis.socialnetwork.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
 public class Post {
 
     @Id
@@ -15,7 +23,7 @@ public class Post {
     private String testo;
 
     @Column(nullable = false, unique=false)
-    private String dataEOra;
+    private LocalDateTime dataEOra;
 
     @Column(nullable=false, unique=false)
     private String DataUltimaModifica;
@@ -33,5 +41,9 @@ public class Post {
 
     @ManyToMany(mappedBy = "postsLiked", fetch = FetchType.LAZY)
     private List<Utente> utentiCheHannoMessoLike;
+
+    public Post(){
+
+    }
 
 }

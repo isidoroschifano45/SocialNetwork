@@ -1,14 +1,19 @@
 package org.elis.socialnetwork.service;
 
+import org.elis.socialnetwork.model.Post;
+
+import java.util.List;
+
 public interface PostService {
-    //Post findById(Long id);
-   /* Utente findUtenteByUsername(String username);
-    Utente saveUtente(Utente u);
-    void deleteUtenteById(Long id);
-    List<Utente> findAll();
-    Utente updateUtenteById(Long id, Utente u);
-    List<Utente> findFollowers(Long id);
-    List<Utente> findFollowing(Long id);*/
+    Post findPostById(Long id);
+    List<Post> findPostsByUtenteId(Long utenteId);
+    Post savePost(Post post);
+    Post updatePost(Long id, Post post);
+    void deletePostById(Long id);
+    void likePost(Long postId, Long utenteId);
+    void unlikePost(Long postId, Long utenteId);
+
+
 
 }
 
