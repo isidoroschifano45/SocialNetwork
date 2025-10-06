@@ -9,7 +9,6 @@ import org.elis.socialnetwork.model.Ruolo;
 import org.elis.socialnetwork.model.Utente;
 import org.elis.socialnetwork.repository.UtenteRepository;
 import org.elis.socialnetwork.service.UtenteService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
