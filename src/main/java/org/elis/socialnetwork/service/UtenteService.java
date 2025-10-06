@@ -11,6 +11,7 @@ public interface UtenteService extends UserDetailsService {
 
     Utente findById(Long id);
     Utente findUtenteByUsername(String username);
+    @Deprecated
     Utente saveUtente(Utente u);
     void deleteUtenteById(Long id);
     List<Utente> findAll();
