@@ -4,14 +4,19 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.elis.socialnetwork.dto.request.post.PostCreateDTO;
 import org.elis.socialnetwork.dto.request.utente.LoginDTO;
 import org.elis.socialnetwork.dto.request.utente.UtenteRegisterDTO;
 import org.elis.socialnetwork.dto.request.utente.UtenteUpdateDTO;
+import org.elis.socialnetwork.dto.response.post.PostResponseDTO;
 import org.elis.socialnetwork.dto.response.utente.UtenteResponseDTO;
 import org.elis.socialnetwork.dto.response.utente.UtenteWithFollowDTO;
+import org.elis.socialnetwork.mapper.post.PostMapper;
 import org.elis.socialnetwork.mapper.utente.UtenteMapper;
+import org.elis.socialnetwork.model.Post;
 import org.elis.socialnetwork.model.Utente;
 import org.elis.socialnetwork.security.config.JwtUtilities;
+import org.elis.socialnetwork.service.PostService;
 import org.elis.socialnetwork.service.UtenteService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -32,6 +37,9 @@ public class UtenteController {
 
     // I Mapper gestiscono la conversione tra entità e DTO
     private final UtenteMapper utenteMapper;
+
+    private final PostService postService;
+    private final PostMapper postMapper;
 
     private final JwtUtilities jwtUtilities;
 
@@ -111,6 +119,8 @@ public class UtenteController {
 
 
     }
+
+
 
 
     // - - - - - TUTTI I PATCH - - - - -

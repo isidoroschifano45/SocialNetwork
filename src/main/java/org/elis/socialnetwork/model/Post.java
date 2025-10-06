@@ -25,7 +25,7 @@ public class Post {
     @Column(nullable = false, unique=false)
     private LocalDateTime dataEOra;
 
-    @Column(nullable=false, unique=false)
+    @Column(nullable=true, unique=false)
     private String DataUltimaModifica;
 
     /*

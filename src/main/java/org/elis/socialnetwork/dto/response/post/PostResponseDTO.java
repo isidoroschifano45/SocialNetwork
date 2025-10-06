@@ -16,6 +16,5 @@ public class PostResponseDTO {
     private Long id;
     private String testo;
     private LocalDateTime dataEOra;
-    private UtenteResponseDTO utente;
     private Integer likes;
 }

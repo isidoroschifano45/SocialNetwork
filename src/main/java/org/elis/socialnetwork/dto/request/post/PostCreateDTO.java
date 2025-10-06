@@ -14,6 +14,6 @@ public class PostCreateDTO {
 
     private String testo;
     private LocalDateTime dataEOra;
-    private UtenteResponseDTO utente;
+
 
 }
