@@ -3,6 +3,7 @@ package org.elis.socialnetwork.dto.response.utente;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.elis.socialnetwork.model.Ruolo;
 
 @Getter
 @Setter
@@ -14,5 +15,6 @@ public class UtenteResponseDTO {
     private String email;
     private Integer followers;
     private Integer following;
+    private Ruolo ruolo;
 
 }

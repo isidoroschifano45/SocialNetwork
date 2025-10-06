@@ -10,10 +10,10 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
     @Override
     public Post findPostById(Long postId) {
-
+            return null;
     }
 
-    @Override
+
     public List<Post> findAllPosts() {
         return List.of();
     }

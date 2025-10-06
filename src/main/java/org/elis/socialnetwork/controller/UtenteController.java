@@ -59,9 +59,9 @@ public class UtenteController {
 
     @Operation(summary = "Inserisci un nuovo utente")
     @PostMapping("/utenti")
-    public ResponseEntity<UtenteResponseDTO> insertUtente(@Valid @RequestBody UtenteRegisterDTO u){
+    public ResponseEntity<UtenteResponseDTO> registraUtente(@Valid @RequestBody UtenteRegisterDTO u){
 
-        Utente utenteSalvato = utenteService.saveUtente(utenteMapper.formInsertUtente(u));
+        Utente utenteSalvato = utenteService.registraUtente(utenteMapper.formInsertUtente(u));
 
         return ResponseEntity.ok().body(utenteMapper.convertToDTO(utenteSalvato));
     }

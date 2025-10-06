@@ -1,22 +1,27 @@
 package org.elis.socialnetwork.service.impl;
 
 
+import lombok.RequiredArgsConstructor;
 import org.elis.socialnetwork.dto.request.utente.UtenteUpdateDTO;
 import org.elis.socialnetwork.exception.utente.UtenteAlreadyFollowed;
 import org.elis.socialnetwork.exception.utente.UtenteNotFoundException;
+import org.elis.socialnetwork.model.Ruolo;
 import org.elis.socialnetwork.model.Utente;
 import org.elis.socialnetwork.repository.UtenteRepository;
 import org.elis.socialnetwork.service.UtenteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class UtenteServiceImpl implements UtenteService {
 
-    @Autowired
-    private UtenteRepository utenteRepo;
+
+    private final UtenteRepository utenteRepo;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Utente findById(Long id) {
@@ -102,7 +107,15 @@ public class UtenteServiceImpl implements UtenteService {
         return utenteRepo.save(utenteMain);
     }
 
+    @Override
+    public Utente registraUtente(Utente u) {
 
+        String passwordCifrata = passwordEncoder.encode(u.getPassword());
+        u.setPassword(passwordCifrata);
+        u.setRuolo(Ruolo.USER);
+
+        return utenteRepo.save(u);
+    }
 
 
 }
