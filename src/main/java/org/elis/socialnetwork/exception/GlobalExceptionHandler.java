@@ -1,5 +1,7 @@
 package org.elis.socialnetwork.exception;
 
+import org.elis.socialnetwork.exception.post.PostNotAllowed;
+import org.elis.socialnetwork.exception.post.PostNotFoundException;
 import org.elis.socialnetwork.exception.utente.UtenteAlreadyFollowed;
 import org.elis.socialnetwork.exception.utente.UtenteNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -67,4 +69,28 @@ public class GlobalExceptionHandler {
         body.put("descrizione", "Segui già questo utente");
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
-}
+
+    @ExceptionHandler(PostNotFoundException.class)
+        public ResponseEntity<?> handlePostNotFound(PostNotFoundException ex) {
+            Map<String, Object> body = new HashMap<>();
+            body.put("timestamp", LocalDateTime.now());
+            body.put("status", HttpStatus.NOT_FOUND.value());
+            body.put("error", "Not Found");
+            body.put("message", ex.getMessage());
+            body.put("descrizione", "Il post che stai cercando non esiste nel DB");
+            return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        }
+
+    @ExceptionHandler(PostNotAllowed.class)
+    public ResponseEntity<?> handlePostNotAllowed(PostNotAllowed ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.NOT_ACCEPTABLE.value());
+        body.put("error", "Not Acceptable");
+        body.put("message", ex.getMessage());
+        body.put("descrizione", "Il post che stai cercando di modificare non e' tuo");
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    }
+
