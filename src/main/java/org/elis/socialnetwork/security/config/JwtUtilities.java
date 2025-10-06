@@ -2,7 +2,7 @@ package org.elis.socialnetwork.security.config;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import org.elis.socialnetwork.dto.response.utente.UtenteResponseDTO;
+import org.elis.socialnetwork.model.Utente;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -16,7 +16,7 @@ public class JwtUtilities {
         return Keys.hmacShaKeyFor(KEY.getBytes());
     }
 
-    public String generaToken(UtenteResponseDTO utente)
+    public String generaToken(Utente utente)
     {
         long dataOggi = System.currentTimeMillis();
         long dataScadenza = dataOggi + 1000L *60*60*24*30;

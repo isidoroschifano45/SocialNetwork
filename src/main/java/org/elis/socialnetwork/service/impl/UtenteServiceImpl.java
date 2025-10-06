@@ -2,6 +2,7 @@ package org.elis.socialnetwork.service.impl;
 
 
 import lombok.RequiredArgsConstructor;
+import org.elis.socialnetwork.dto.request.utente.LoginDTO;
 import org.elis.socialnetwork.dto.request.utente.UtenteUpdateDTO;
 import org.elis.socialnetwork.exception.utente.UtenteAlreadyFollowed;
 import org.elis.socialnetwork.exception.utente.UtenteNotFoundException;
@@ -9,8 +10,12 @@ import org.elis.socialnetwork.model.Ruolo;
 import org.elis.socialnetwork.model.Utente;
 import org.elis.socialnetwork.repository.UtenteRepository;
 import org.elis.socialnetwork.service.UtenteService;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -114,6 +119,21 @@ public class UtenteServiceImpl implements UtenteService {
         u.setRuolo(Ruolo.USER);
 
         return utenteRepo.save(u);
+    }
+
+    @Override
+    public Utente login(LoginDTO u) {
+        Utente utenteLoggato = utenteRepo.findUtenteByEmail(u.getEmail());
+        if(!passwordEncoder.matches(u.getPassword(), utenteLoggato.getPassword())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "password errata");
+        }
+        return utenteLoggato;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return utenteRepo.findUtenteByUsername(username)
+                .orElseThrow(()->new UsernameNotFoundException("utente con username "+username+" non trovato"));
     }
 
 

@@ -1,11 +1,13 @@
 package org.elis.socialnetwork.service;
 
+import org.elis.socialnetwork.dto.request.utente.LoginDTO;
 import org.elis.socialnetwork.dto.request.utente.UtenteUpdateDTO;
 import org.elis.socialnetwork.model.Utente;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface UtenteService {
+public interface UtenteService extends UserDetailsService {
 
     Utente findById(Long id);
     Utente findUtenteByUsername(String username);
@@ -17,5 +19,6 @@ public interface UtenteService {
     Utente removeFollowing(Long id, Long idFollowing);
     Utente removeFollower(Long id, Long idFollower);
     Utente registraUtente(Utente u);
+    Utente login(LoginDTO u);
 
 }

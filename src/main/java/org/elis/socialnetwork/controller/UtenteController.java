@@ -4,15 +4,20 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.elis.socialnetwork.dto.request.utente.LoginDTO;
 import org.elis.socialnetwork.dto.request.utente.UtenteRegisterDTO;
 import org.elis.socialnetwork.dto.request.utente.UtenteUpdateDTO;
 import org.elis.socialnetwork.dto.response.utente.UtenteResponseDTO;
 import org.elis.socialnetwork.dto.response.utente.UtenteWithFollowDTO;
 import org.elis.socialnetwork.mapper.utente.UtenteMapper;
 import org.elis.socialnetwork.model.Utente;
+import org.elis.socialnetwork.security.config.JwtUtilities;
 import org.elis.socialnetwork.service.UtenteService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -28,6 +33,8 @@ public class UtenteController {
     // I Mapper gestiscono la conversione tra entità e DTO
     private final UtenteMapper utenteMapper;
 
+    private final JwtUtilities jwtUtilities;
+
     // - - - - - TUTTI I GET - - - - -
     @Operation(summary = "Ottieni la lista di tutti gli utenti")
     @GetMapping("/utenti")
@@ -41,7 +48,7 @@ public class UtenteController {
     @Operation(summary = "Ottieni un utente dall'id")
     @GetMapping("/utenti/{id}")
     public ResponseEntity<UtenteWithFollowDTO> getUtenteById(@PathVariable Long id){
-
+        System.out.println("Visualizza");
        Utente utenteById =  utenteService.findById(id);
         return ResponseEntity.ok().body(utenteMapper.convertToDTOWithFollow(utenteById));
     }
@@ -51,14 +58,15 @@ public class UtenteController {
     public ResponseEntity<UtenteResponseDTO> findUtenteByUsername(@PathVariable String username){
 
        Utente utenteByUsername =  utenteService.findUtenteByUsername(username);
+
        return ResponseEntity.ok().body(utenteMapper.convertToDTO(utenteByUsername));
 
     }
 
     // - - - - - TUTTI I POST - - - - -
 
-    @Operation(summary = "Inserisci un nuovo utente")
-    @PostMapping("/utenti")
+    @Operation(summary = "Registra un utente")
+    @PostMapping("/registrazione")
     public ResponseEntity<UtenteResponseDTO> registraUtente(@Valid @RequestBody UtenteRegisterDTO u){
 
         Utente utenteSalvato = utenteService.registraUtente(utenteMapper.formInsertUtente(u));
@@ -66,6 +74,7 @@ public class UtenteController {
         return ResponseEntity.ok().body(utenteMapper.convertToDTO(utenteSalvato));
     }
 
+    @Operation(summary = "Segui un utente")
     @PostMapping("/utenti/{id}/segue/{idFollowing}")
     public ResponseEntity<UtenteWithFollowDTO> seguiUtente(@PathVariable Long id, @PathVariable Long idFollowing){
 
@@ -74,6 +83,7 @@ public class UtenteController {
         return ResponseEntity.ok().body(utenteMapper.convertToDTOWithFollow(utenteSeguito));
     }
 
+    @Operation(summary = "Smetti di seguire un utente")
     @PostMapping("/utenti/{id}/removeFollowing/{idFollowing}")
     public ResponseEntity<UtenteWithFollowDTO> removeFollowing(@PathVariable Long id, @PathVariable Long idFollowing){
 
@@ -82,12 +92,26 @@ public class UtenteController {
         return ResponseEntity.ok().body(utenteMapper.convertToDTOWithFollow(utenteSeguito));
     }
 
+    @Operation(summary = "Togli un follower")
     @PostMapping("/utenti/{id}/removeFollower/{idFollower}")
     public ResponseEntity<UtenteWithFollowDTO> removeFollower(@PathVariable Long id, @PathVariable Long idFollower){
             Utente utenteSeguito = utenteService.removeFollower(id, idFollower);
 
             return ResponseEntity.ok().body(utenteMapper.convertToDTOWithFollow(utenteSeguito));
     }
+
+    @Operation(summary = "Faccio il login")
+    @PostMapping("/login")
+    public ResponseEntity<UtenteResponseDTO> login(@Valid @RequestBody LoginDTO loginDTO){
+
+        Utente login = utenteService.login(loginDTO);
+        String token = jwtUtilities.generaToken(login);
+
+        return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.AUTHORIZATION, token).body(utenteMapper.convertToDTO(login));
+
+
+    }
+
 
     // - - - - - TUTTI I PATCH - - - - -
 
