@@ -26,6 +26,7 @@ public class JwtUtilities {
                 .expiration(new Date(dataScadenza))
                 .claims()
                 .add("ruolo",utente.getRuolo().toString())
+                .add("id", utente.getId())
                 .and()
                 .signWith(secretKey())
                 .compact();
@@ -39,5 +40,14 @@ public class JwtUtilities {
                 .parseSignedClaims(token)
                 .getPayload()
                 .getSubject();
+    }
+
+    public String getIdFromToken(String token){
+        return Jwts.parser()
+                .verifyWith(secretKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("id").toString();
     }
 }

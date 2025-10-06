@@ -8,7 +8,7 @@ import java.util.List;
 public interface PostService {
     Post findPostById(Long id);
     List<Post> findPostsByUtenteId(Long utenteId);
-    Post createPost(PostCreateDTO post, Long  idUtente);
+    Post createPost(PostCreateDTO post, String username);
     Post updatePost(Long id, Post post);
     void deletePostById(Long id);
     void likePost(Long postId, Long utenteId);

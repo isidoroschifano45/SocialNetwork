@@ -4,6 +4,8 @@ import org.elis.socialnetwork.exception.utente.UtenteAlreadyFollowed;
 import org.elis.socialnetwork.exception.utente.UtenteNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -67,5 +69,4 @@ public class GlobalExceptionHandler {
         body.put("descrizione", "Segui già questo utente");
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
-
 }

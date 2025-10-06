@@ -36,8 +36,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post createPost(PostCreateDTO post , Long idUtente) {
-            Utente u = utenteRepo.findById(idUtente).orElseThrow(()->new UtenteNotFoundException("Utente con id: "+idUtente+" non trovato"));
+    public Post createPost(PostCreateDTO post , String nomeUtente) {
+            Utente u = utenteRepo.findUtenteByUsername(nomeUtente).orElseThrow(()->new UtenteNotFoundException("Utente con username: "+nomeUtente+" non trovato"));
             Post nuovoPost = new Post();
             nuovoPost.setTesto(post.getTesto());
             nuovoPost.setDataEOra(post.getDataEOra());

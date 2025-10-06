@@ -35,22 +35,17 @@ public class MyAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
-        System.out.println("doFilterInternal");
         try{
             String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
             SecurityContext securityContext = SecurityContextHolder.getContext();
             boolean giaAutenticato = securityContext.getAuthentication()!=null;
             if(authHeader==null||giaAutenticato||!authHeader.startsWith("Bearer "))
             {
-                System.out.println("GiaAutenticato");
                 filterChain.doFilter(request,response);
                 return;
             }
             String token = authHeader.substring(7);
             String username = jwtUtilities.getUsernameFromToken(token);
-
-            System.out.println(username + " controllo");
 
             UserDetails utente = userDetailsService.loadUserByUsername(username);
 

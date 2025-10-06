@@ -73,15 +73,6 @@ public class UtenteController {
 
     // - - - - - TUTTI I POST - - - - -
 
-    @Operation(summary = "Registra un utente")
-    @PostMapping("/registrazione")
-    public ResponseEntity<UtenteResponseDTO> registraUtente(@Valid @RequestBody UtenteRegisterDTO u){
-
-        Utente utenteSalvato = utenteService.registraUtente(utenteMapper.formInsertUtente(u));
-
-        return ResponseEntity.ok().body(utenteMapper.convertToDTO(utenteSalvato));
-    }
-
     @Operation(summary = "Segui un utente")
     @PostMapping("/utenti/{id}/segue/{idFollowing}")
     public ResponseEntity<UtenteWithFollowDTO> seguiUtente(@PathVariable Long id, @PathVariable Long idFollowing){
@@ -107,21 +98,6 @@ public class UtenteController {
 
             return ResponseEntity.ok().body(utenteMapper.convertToDTOWithFollow(utenteSeguito));
     }
-
-    @Operation(summary = "Faccio il login")
-    @PostMapping("/login")
-    public ResponseEntity<UtenteResponseDTO> login(@Valid @RequestBody LoginDTO loginDTO){
-
-        Utente login = utenteService.login(loginDTO);
-        String token = jwtUtilities.generaToken(login);
-
-        return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.AUTHORIZATION, token).body(utenteMapper.convertToDTO(login));
-
-
-    }
-
-
-
 
     // - - - - - TUTTI I PATCH - - - - -
 
