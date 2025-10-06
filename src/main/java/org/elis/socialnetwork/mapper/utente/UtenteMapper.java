@@ -23,9 +23,9 @@ public class UtenteMapper {
         utenteResponse.setId(u.getId());
         utenteResponse.setUsername(u.getUsername());
         utenteResponse.setEmail(u.getEmail());
-        utenteResponse.setFollowers(u.getFollowers().size());
-        utenteResponse.setFollowing(u.getFollowing().size());
-
+        utenteResponse.setFollowers(u.getFollowers() == null ? 0 : u.getFollowers().size());
+        utenteResponse.setFollowing(u.getFollowing() == null ? 0 : u.getFollowing().size());
+        utenteResponse.setRuolo(u.getRuolo());
         return utenteResponse;
     }
 
