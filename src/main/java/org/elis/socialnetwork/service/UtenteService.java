@@ -16,9 +16,9 @@ public interface UtenteService extends UserDetailsService {
     void deleteUtenteById(Long id);
     List<Utente> findAll();
     Utente updateUtenteById(Long id, UtenteUpdateDTO u);
-    Utente addFollowing(Long id, Long idFollowing);
-    Utente removeFollowing(Long id, Long idFollowing);
-    Utente removeFollower(Long id, Long idFollower);
+    Utente addFollowing(String usernameMain , String usernameFollowing);
+    Utente removeFollowing(String usernameMain , String usernameFollowing);
+    Utente removeFollower(String usernameMain , String usernameFollower);
     Utente registraUtente(Utente u);
     Utente login(LoginDTO u);
 

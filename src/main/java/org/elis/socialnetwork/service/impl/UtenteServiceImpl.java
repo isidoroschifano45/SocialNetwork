@@ -63,12 +63,14 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
-    public Utente addFollowing(Long id, Long idFollowing) {
-        Utente utenteMain = utenteRepo.findById(id).orElseThrow(()->new UtenteNotFoundException("Utente con id: "+id+" non trovato"));
-        Utente utenteSeguito = utenteRepo.findById(idFollowing).orElseThrow(()->new UtenteNotFoundException("Utente con id: "+id+" non trovato"));
-
+    public Utente addFollowing(String usernameMain, String usernameFollowing) {
+        Utente utenteMain = utenteRepo.findUtenteByUsername(usernameMain).orElseThrow(()->new UtenteNotFoundException("Utente con username: "+usernameMain+" non trovato"));
+        Utente utenteSeguito = utenteRepo.findUtenteByUsername(usernameFollowing).orElseThrow(()->new UtenteNotFoundException("Utente con username: "+usernameFollowing+" non trovato"));
+        if(utenteMain.getUsername().equals(utenteSeguito.getUsername())){
+            throw new UtenteAlreadyFollowed("Non puoi seguire te stesso");
+        }
         if(utenteMain.getFollowing().contains(utenteSeguito)){
-            throw new UtenteAlreadyFollowed("Utente con id: "+idFollowing+" già seguito");
+            throw new UtenteAlreadyFollowed("Utente con username: "+usernameFollowing+" già seguito");
         }
         utenteMain.getFollowing().add(utenteSeguito);
         utenteSeguito.getFollowers().add(utenteMain);
@@ -80,12 +82,15 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
-    public Utente removeFollowing(Long id, Long idFollowing) {
-        Utente utenteMain = utenteRepo.findById(id).orElseThrow(()->new UtenteNotFoundException("Utente con id: "+id+" non trovato"));
-        Utente utenteSeguito = utenteRepo.findById(idFollowing).orElseThrow(()->new UtenteNotFoundException("Utente con id: "+id+" non trovato"));
+    public Utente removeFollowing(String usernameMain, String usernameFollowing) {
+        Utente utenteMain = utenteRepo.findUtenteByUsername(usernameMain).orElseThrow(()->new UtenteNotFoundException("Utente con username: "+usernameMain+" non trovato"));
+        Utente utenteSeguito = utenteRepo.findUtenteByUsername(usernameFollowing).orElseThrow(()->new UtenteNotFoundException("Utente con username: "+usernameFollowing+" non trovato"));
+        if(utenteMain.getUsername().equals(utenteSeguito.getUsername())){
+            throw new UtenteAlreadyFollowed("Non puoi smettere di seguire te stesso");
+        }
 
         if(!utenteMain.getFollowing().contains(utenteSeguito)){
-            throw new UtenteNotFoundException("Utente con id: " + idFollowing + " non è nella lista dei seguiti");
+            throw new UtenteNotFoundException("Utente con username: " + usernameFollowing + " non è nella lista dei seguiti");
         }
         utenteMain.getFollowing().remove(utenteSeguito);
         utenteSeguito.getFollowers().remove(utenteMain);
@@ -96,17 +101,20 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
-    public Utente removeFollower(Long id, Long idFollower) {
-        Utente utenteMain = utenteRepo.findById(id).orElseThrow(()->new UtenteNotFoundException("Utente con id: "+id+" non trovato"));
-        Utente utenteSeguito = utenteRepo.findById(idFollower).orElseThrow(()->new UtenteNotFoundException("Utente con id: "+id+" non trovato"));
-
-        if(!utenteMain.getFollowing().contains(utenteSeguito)){
-            throw new UtenteNotFoundException("Utente con id: " + idFollower + " non è nella lista di coloro che ti seguono");
+    public Utente removeFollower(String usernameMain, String usernameFollower) {
+        Utente utenteMain = utenteRepo.findUtenteByUsername(usernameMain).orElseThrow(()->new UtenteNotFoundException("Utente con username: "+usernameMain+" non trovato"));
+        Utente utenteFollower = utenteRepo.findUtenteByUsername(usernameFollower).orElseThrow(()->new UtenteNotFoundException("Utente con username: "+usernameFollower+" non trovato"));
+        if(utenteMain.getUsername().equals(utenteFollower.getUsername())) {
+            throw new UtenteAlreadyFollowed("Non puoi togliere te stesso dalla lista dei followers");
         }
-        utenteMain.getFollowers().remove(utenteSeguito);
-        utenteSeguito.getFollowing().remove(utenteMain);
 
-        utenteRepo.save(utenteSeguito);
+        if(!utenteMain.getFollowing().contains(utenteFollower)){
+            throw new UtenteNotFoundException("Utente con id: " + utenteFollower + " non è nella lista di coloro che ti seguono");
+        }
+        utenteMain.getFollowers().remove(utenteFollower);
+        utenteFollower.getFollowing().remove(utenteMain);
+
+        utenteRepo.save(utenteFollower);
 
         return utenteRepo.save(utenteMain);
     }

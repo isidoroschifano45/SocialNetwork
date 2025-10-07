@@ -10,6 +10,8 @@ import org.elis.socialnetwork.mapper.utente.UtenteMapper;
 import org.elis.socialnetwork.model.Utente;
 import org.elis.socialnetwork.service.UtenteService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,29 +59,36 @@ public class UtenteController {
     // - - - - - TUTTI I POST - - - - -
 
     @Operation(summary = "Segui un utente")
-    @PostMapping("/utenti/{id}/segue/{idFollowing}")
-    public ResponseEntity<UtenteWithFollowDTO> seguiUtente(@PathVariable Long id, @PathVariable Long idFollowing){
+    @PostMapping("/utenti/segue/{usernameFollowing}")
+    public ResponseEntity<UtenteWithFollowDTO> seguiUtente(@PathVariable String usernameFollowing){
 
-        Utente utenteSeguito = utenteService.addFollowing(id, idFollowing);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String usernameMain = authentication.getName();
+        Utente utenteSeguito = utenteService.addFollowing(usernameMain ,usernameFollowing);
 
         return ResponseEntity.ok().body(utenteMapper.convertToDTOWithFollow(utenteSeguito));
     }
 
     @Operation(summary = "Smetti di seguire un utente")
-    @PostMapping("/utenti/{id}/removeFollowing/{idFollowing}")
-    public ResponseEntity<UtenteWithFollowDTO> removeFollowing(@PathVariable Long id, @PathVariable Long idFollowing){
+    @PostMapping("/utenti/removeFollowing/{usernameFollowing}")
+    public ResponseEntity<UtenteWithFollowDTO> removeFollowing(@PathVariable String usernameFollowing){
 
-        Utente utenteSeguito = utenteService.removeFollowing(id, idFollowing);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String usernameMain = authentication.getName();
+        Utente utenteSeguito = utenteService.removeFollowing(usernameMain ,usernameFollowing);
 
         return ResponseEntity.ok().body(utenteMapper.convertToDTOWithFollow(utenteSeguito));
     }
 
     @Operation(summary = "Togli un follower")
-    @PostMapping("/utenti/{id}/removeFollower/{idFollower}")
-    public ResponseEntity<UtenteWithFollowDTO> removeFollower(@PathVariable Long id, @PathVariable Long idFollower){
-            Utente utenteSeguito = utenteService.removeFollower(id, idFollower);
+    @PostMapping("/utenti/removeFollower/{usernameFollower}")
+    public ResponseEntity<UtenteWithFollowDTO> removeFollower(@PathVariable String usernameFollower){
 
-            return ResponseEntity.ok().body(utenteMapper.convertToDTOWithFollow(utenteSeguito));
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String usernameMain = authentication.getName();
+            Utente utenteFollower = utenteService.removeFollower(usernameMain ,usernameFollower);
+
+            return ResponseEntity.ok().body(utenteMapper.convertToDTOWithFollow(utenteFollower));
     }
 
     // - - - - - TUTTI I PATCH - - - - -

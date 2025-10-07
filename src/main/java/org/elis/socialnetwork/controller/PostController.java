@@ -47,6 +47,27 @@ public class PostController {
         return ResponseEntity.ok().body(postMapper.convertToDTO(postCreato));
     }
 
+    @PostMapping("/posts/like/{idPost}")
+    public ResponseEntity<Void> likePost(@PathVariable Long idPost) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        postService.likePost(idPost, username);
+        return ResponseEntity.ok().build();
+    }
+
+
+    @Operation(summary = "Togliere 'mi piace' ad un post")
+    @PostMapping("/posts/unlike/{idPost}")
+    public ResponseEntity<Void> unlikePost(@PathVariable Long idPost) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        postService.unlikePost(idPost, username);
+        return ResponseEntity.ok().build();
+
+    }
+
+
+
     // - - - - - TUTTI I PATCH - - - - -
     @Operation(summary = "Modifica il post")
     @PostMapping("/posts/modifica/{idPost}")

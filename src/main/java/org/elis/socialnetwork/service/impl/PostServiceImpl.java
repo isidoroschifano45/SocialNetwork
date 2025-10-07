@@ -2,7 +2,6 @@ package org.elis.socialnetwork.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.elis.socialnetwork.dto.request.post.PostCreateDTO;
-import org.elis.socialnetwork.dto.response.post.PostResponseDTO;
 import org.elis.socialnetwork.exception.post.PostNotAllowed;
 import org.elis.socialnetwork.exception.post.PostNotFoundException;
 import org.elis.socialnetwork.exception.utente.UtenteNotFoundException;
@@ -28,7 +27,7 @@ public class PostServiceImpl implements PostService {
             return null;
     }
 
-
+    @Override
     public List<Post> findAllPosts() {
         return List.of();
     }
@@ -73,22 +72,46 @@ public class PostServiceImpl implements PostService {
     @Override
     public void deletePostById(Long idPost, String username) {
 
-        Utente u = utenteRepo.findUtenteByUsername(username).orElseThrow(()->new UtenteNotFoundException("Utente con username: "+username+" non trovato"));
-        Post postDaCancellare = postRepo.findById(idPost).orElseThrow(()->new PostNotFoundException("Post con id: "+idPost+" non trovato"));
-        if(!postDaCancellare.getUtente().getEmail().equals(u.getEmail())){
-            System.out.println("asfcdsfvdsv");
+        Utente u = utenteRepo.findUtenteByUsername(username).orElseThrow(() -> new UtenteNotFoundException("Utente con username: " + username + " non trovato"));
+        Post postDaCancellare = postRepo.findById(idPost).orElseThrow(() -> new PostNotFoundException("Post con id: " + idPost + " non trovato"));
+        if (!postDaCancellare.getUtente().getEmail().equals(u.getEmail())) {
             throw new PostNotAllowed("Non sei il proprietario di questo post");
         }
         postRepo.delete(postDaCancellare);
     }
 
     @Override
-    public void likePost(Long postId, Long utenteId) {
+    public void likePost(Long postId, String username) {
+        Utente utenteMetteLike = utenteRepo.findUtenteByUsername(username)
+                .orElseThrow(() -> new UtenteNotFoundException("Utente con username: " + username + " non trovato"));
+        Post post = postRepo.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("Post con id: " + postId + " non trovato"));
+
+        if (!post.getUtentiCheHannoMessoLike().contains(utenteMetteLike)) {
+            System.out.println("prova");
+            post.getUtentiCheHannoMessoLike().add(utenteMetteLike);
+            utenteMetteLike.getPostsLiked().add(post);
+            postRepo.save(post);
+
+        }
 
     }
 
+
     @Override
-    public void unlikePost(Long postId, Long utenteId) {
+    public void unlikePost(Long postId, String username) {
+
+        Utente utenteToglieLike = utenteRepo.findUtenteByUsername(username)
+                .orElseThrow(() -> new UtenteNotFoundException("Utente con username: " + username + " non trovato"));
+        Post post = postRepo.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("Post con id: " + postId + " non trovato"));
+
+        if (post.getUtentiCheHannoMessoLike().contains(utenteToglieLike)) {
+            post.getUtentiCheHannoMessoLike().remove(utenteToglieLike);
+            utenteToglieLike.getPostsLiked().remove(post);
+            postRepo.save(post);
+        }
+
 
     }
 }
