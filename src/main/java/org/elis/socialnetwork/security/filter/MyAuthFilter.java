@@ -59,7 +59,7 @@ public class MyAuthFilter extends OncePerRequestFilter {
         }
         catch (Exception e){
             resolver.resolveException(request,response,null,e);
-            filterChain.doFilter(request,response);
+            //filterChain.doFilter(request,response);
             return;
         }
     }
