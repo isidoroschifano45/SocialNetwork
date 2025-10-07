@@ -28,13 +28,18 @@ public class Post {
     @Column(nullable=true, unique=false)
     private String DataUltimaModifica;
 
-    /*
-    @Column()
-    @ManyToMany(MappedBy = "hastag", fetch=FetchType.LAZY)
-    private List<Hastag> hastag;
-    */
 
-    
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "post_hastag",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "hastag_id")
+    )
+    private List<Hastag> hastag;
+
+
+
+
     @ManyToOne
     @JoinColumn(name = "utente_id", nullable = false)
     private Utente utente;

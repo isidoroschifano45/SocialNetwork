@@ -5,8 +5,10 @@ import org.elis.socialnetwork.dto.request.post.PostCreateDTO;
 import org.elis.socialnetwork.exception.post.PostNotAllowed;
 import org.elis.socialnetwork.exception.post.PostNotFoundException;
 import org.elis.socialnetwork.exception.utente.UtenteNotFoundException;
+import org.elis.socialnetwork.model.Hastag;
 import org.elis.socialnetwork.model.Post;
 import org.elis.socialnetwork.model.Utente;
+import org.elis.socialnetwork.repository.HastagRepository;
 import org.elis.socialnetwork.repository.PostRepository;
 import org.elis.socialnetwork.repository.UtenteRepository;
 import org.elis.socialnetwork.service.PostService;
@@ -21,6 +23,7 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepo;
     private final UtenteRepository  utenteRepo;
+    private final HastagRepository hastagRepo;
 
     @Override
     public Post findPostById(Long postId) {
@@ -41,16 +44,29 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post createPost(PostCreateDTO post , String nomeUtente) {
-            Utente u = utenteRepo.findUtenteByUsername(nomeUtente).orElseThrow(()->new UtenteNotFoundException("Utente con username: "+nomeUtente+" non trovato"));
-            Post nuovoPost = new Post();
-            nuovoPost.setTesto(post.getTesto());
-            nuovoPost.setDataEOra(post.getDataEOra());
-            nuovoPost.setUtentiCheHannoMessoLike(new ArrayList<>());
-            nuovoPost.setUtente(u);
+    public Post createPost(PostCreateDTO post, String nomeUtente) {
+        Utente u = utenteRepo.findUtenteByUsername(nomeUtente)
+                .orElseThrow(() -> new UtenteNotFoundException("Utente con username: " + nomeUtente + " non trovato"));
+        Post nuovoPost = new Post();
+        nuovoPost.setTesto(post.getTesto());
+        nuovoPost.setDataEOra(post.getDataEOra());
+        nuovoPost.setUtentiCheHannoMessoLike(new ArrayList<>());
+        nuovoPost.setUtente(u);
 
-            return postRepo.save(nuovoPost);
+        List<String> hastags = post.getHastags();
+        List<Hastag> listaHastag = new ArrayList<>();
+        for (String hastag : hastags) {
+            Hastag aggiungiHastag = hastagRepo.getByNome(hastag);
+            if (aggiungiHastag == null) {
+                aggiungiHastag = new Hastag();
+                aggiungiHastag.setNome(hastag);
+                aggiungiHastag = hastagRepo.save(aggiungiHastag); // salvo nel db
+            }
+            listaHastag.add(aggiungiHastag); // aggiungo alla lista
+        }
+        nuovoPost.setHastag(listaHastag);
 
+        return postRepo.save(nuovoPost);
     }
 
 
