@@ -17,5 +17,6 @@ public class PostResponseDTO {
     private String testo;
     private LocalDateTime dataEOra;
     private Integer likes;
+    private String link;
 
 }

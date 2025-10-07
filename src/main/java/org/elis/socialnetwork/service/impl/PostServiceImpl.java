@@ -52,6 +52,7 @@ public class PostServiceImpl implements PostService {
         nuovoPost.setDataEOra(post.getDataEOra());
         nuovoPost.setUtentiCheHannoMessoLike(new ArrayList<>());
         nuovoPost.setUtente(u);
+        nuovoPost.setLink(post.getLink());
 
         List<String> hastags = post.getHastags();
         List<Hastag> listaHastag = new ArrayList<>();

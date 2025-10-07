@@ -26,6 +26,7 @@ public class PostMapper {
         postResponseDTO.setTesto(post.getTesto());
         postResponseDTO.setDataEOra(post.getDataEOra());
         postResponseDTO.setLikes(post.getUtentiCheHannoMessoLike() != null ? post.getUtentiCheHannoMessoLike().size() : 0);
+        postResponseDTO.setLink(post.getLink());
 
         return postResponseDTO;
     }

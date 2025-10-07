@@ -28,6 +28,9 @@ public class Post {
     @Column(nullable=true, unique=false)
     private String DataUltimaModifica;
 
+    @Column(nullable = false, unique=false)
+    private String link;
+
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
