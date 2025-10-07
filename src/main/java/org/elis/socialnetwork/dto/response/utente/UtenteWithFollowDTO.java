@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class UtenteWithFollowDTO {
 
-    private Long id;
+    private Long idUtente;
     private String username;
     private List<UtenteResponseDTO> followers;
     private List<UtenteResponseDTO> following;

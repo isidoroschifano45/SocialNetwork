@@ -10,7 +10,7 @@ import org.elis.socialnetwork.model.Ruolo;
 @NoArgsConstructor
 public class UtenteResponseDTO {
 
-    private Long id;
+    private Long idUtente;
     private String username;
     private String email;
     private Integer followers;

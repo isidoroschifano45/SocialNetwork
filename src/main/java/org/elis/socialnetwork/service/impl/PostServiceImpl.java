@@ -14,6 +14,7 @@ import org.elis.socialnetwork.repository.UtenteRepository;
 import org.elis.socialnetwork.service.PostService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class PostServiceImpl implements PostService {
         Utente u = utenteRepo.findUtenteByUsername(nomeUtente)
                 .orElseThrow(() -> new UtenteNotFoundException("Utente con username: " + nomeUtente + " non trovato"));
         Post nuovoPost = new Post();
-        nuovoPost.setTesto(post.getTesto());
+        nuovoPost.setTesto(post.getTestoPost());
         nuovoPost.setDataEOra(post.getDataEOra());
         nuovoPost.setUtentiCheHannoMessoLike(new ArrayList<>());
         nuovoPost.setUtente(u);
@@ -79,8 +80,8 @@ public class PostServiceImpl implements PostService {
 
             throw new PostNotAllowed("Non sei il proprietario di questo post");
         }
-        postModificato.setTesto(post.getTesto());
-        postModificato.setDataEOra(post.getDataEOra());
+        postModificato.setTesto(post.getTestoPost());
+        postModificato.setDataUltimaModifica(LocalDateTime.now());
 
 
         return postRepo.save(postModificato);
@@ -105,7 +106,6 @@ public class PostServiceImpl implements PostService {
                 .orElseThrow(() -> new PostNotFoundException("Post con id: " + postId + " non trovato"));
 
         if (!post.getUtentiCheHannoMessoLike().contains(utenteMetteLike)) {
-            System.out.println("prova");
             post.getUtentiCheHannoMessoLike().add(utenteMetteLike);
             utenteMetteLike.getPostsLiked().add(post);
             postRepo.save(post);

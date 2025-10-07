@@ -4,11 +4,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.elis.socialnetwork.dto.request.commenti.CommentoCreateDTO;
+import org.elis.socialnetwork.dto.request.commenti.CommentoUpdateDTO;
 import org.elis.socialnetwork.dto.request.post.PostCreateDTO;
 import org.elis.socialnetwork.dto.response.post.PostResponseDTO;
 import org.elis.socialnetwork.mapper.post.PostMapper;
+import org.elis.socialnetwork.model.Commenti;
 import org.elis.socialnetwork.model.Post;
 import org.elis.socialnetwork.model.Utente;
+import org.elis.socialnetwork.service.CommentiService;
 import org.elis.socialnetwork.service.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -24,6 +28,7 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
     private final PostMapper postMapper;
+    private final CommentiService commentiService;
 
     // - - - - - TUTTI I GET - - - - -
     @Operation(summary = "Ottieni la lista dei post di un utente")
@@ -66,6 +71,19 @@ public class PostController {
 
     }
 
+    @Operation(summary = "Commenta un post")
+    @PostMapping("/posts/commenta/{idPost}")
+    public ResponseEntity<Void> commentaPost(@PathVariable Long idPost, @RequestBody CommentoCreateDTO commento) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        commentiService.creaCommento(commento , username ,  idPost);
+
+
+        return ResponseEntity.ok().build();
+
+    }
+
+
 
 
     // - - - - - TUTTI I PATCH - - - - -
@@ -81,15 +99,40 @@ public class PostController {
         
     }
 
+    @Operation(summary = "Modifica il commento")
+    @PatchMapping("/posts/{idPost}/modificacommento/{idCommento}")
+    public ResponseEntity<Void> modificaCommento(
+            @PathVariable Long idPost,
+            @PathVariable Long idCommento,
+            @Valid @RequestBody CommentoUpdateDTO commento) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        commentiService.updateCommento(commento, username, idPost, idCommento);
+        return ResponseEntity.ok().build();
+    }
+
+
+
+
 
     // - - - - - TUTTI I DELETE - - - - -\\
-    @Operation(summary = "Cancella il post") //TODO:da VERIFICARE L'ECCEZIONE
+    @Operation(summary = "Cancella il post")
     @DeleteMapping("/posts/cancella/{idPost}")
     public ResponseEntity<Void> cancellaPost(@PathVariable Long idPost) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
         postService.deletePostById(idPost , username);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Cancella il commento")
+    @DeleteMapping("/posts/{idPost}/removecommento/{idCommento}")
+    public ResponseEntity<Void> cancellaCommento(@PathVariable Long idPost , @PathVariable Long idCommento) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        commentiService.deleteCommento(idCommento , username ,   idPost);
 
         return ResponseEntity.ok().build();
     }

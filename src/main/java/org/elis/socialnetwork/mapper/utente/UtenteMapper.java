@@ -20,7 +20,7 @@ public class UtenteMapper {
 
     public UtenteResponseDTO convertToDTO(Utente u){
         UtenteResponseDTO utenteResponse = new UtenteResponseDTO();
-        utenteResponse.setId(u.getId());
+        utenteResponse.setIdUtente(u.getId());
         utenteResponse.setUsername(u.getUsername());
         utenteResponse.setEmail(u.getEmail());
         utenteResponse.setFollowers(u.getFollowers() == null ? 0 : u.getFollowers().size());
@@ -31,7 +31,7 @@ public class UtenteMapper {
 
     public UtenteWithFollowDTO convertToDTOWithFollow(Utente u){
         UtenteWithFollowDTO utenteWithFollow = new UtenteWithFollowDTO();
-        utenteWithFollow.setId(u.getId());
+        utenteWithFollow.setIdUtente(u.getId());
         utenteWithFollow.setUsername(u.getUsername());
         utenteWithFollow.setFollowers(u.getFollowers().stream()
                 .map(this::convertToDTO)

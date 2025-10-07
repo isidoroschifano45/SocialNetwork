@@ -26,7 +26,7 @@ public class Post {
     private LocalDateTime dataEOra;
 
     @Column(nullable=true, unique=false)
-    private String DataUltimaModifica;
+    private LocalDateTime DataUltimaModifica;
 
     @Column(nullable = false, unique=false)
     private String link;
@@ -39,6 +39,11 @@ public class Post {
             inverseJoinColumns = @JoinColumn(name = "hastag_id")
     )
     private List<Hastag> hastag;
+
+    @OneToMany(mappedBy = "post" ,fetch = FetchType.LAZY )
+    private List<Commenti> commenti;
+
+
 
 
 

@@ -3,7 +3,6 @@ package org.elis.socialnetwork.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -62,6 +61,9 @@ public class Utente implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "post_id")
     )
     private List<Post> postsLiked;
+
+    @OneToMany(mappedBy = "utente", fetch = FetchType.LAZY)
+    private List<Commenti> commenti;
 
 
     public Utente(){
